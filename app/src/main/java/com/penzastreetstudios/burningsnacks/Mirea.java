@@ -15,8 +15,9 @@ public class Mirea {
         Fate.getFate().send(machines, 20);
         update();
         for (int i = 0; i < machines.size(); i++) {
-            machines.get(i).process = new QueueProcess();
-            machines.get(i).process.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, machines.get(i));
+            machines.get(i).thread.start();
+            //machines.get(i).process = new QueueProcess();
+            //machines.get(i).process.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, machines.get(i));
         }
     }
 

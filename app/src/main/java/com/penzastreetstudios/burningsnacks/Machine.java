@@ -1,7 +1,10 @@
 package com.penzastreetstudios.burningsnacks;
 
+import android.os.Handler;
+import android.os.Message;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.penzastreetstudios.burningsnacks.adapters.QueueAdapter;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.LogRecord;
 
 public class Machine {
     int id;
@@ -32,6 +36,7 @@ public class Machine {
     RecyclerView queueField;
     TextView sumField;
     public QueueProcess process;
+    public Thread thread;
 
     public Machine(int id, TextView nameField, TextView statusField, TextView studentField,
                    RecyclerView snacksField, RecyclerView queueField, TextView sumField) {
@@ -44,7 +49,16 @@ public class Machine {
         this.sumField = sumField;
         name = "Автомат " + id;
         status = "Простаивает";
+        thread = new Thread(new QueueThread(this, handler));
     }
+
+    public Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            updateView();
+        }
+    };
 
     public void updateView() {
         nameField.setText(name);
