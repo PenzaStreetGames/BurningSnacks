@@ -3,7 +3,13 @@ package com.penzastreetstudios.burningsnacks;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.penzastreetstudios.burningsnacks.adapters.QueueAdapter;
 import com.penzastreetstudios.burningsnacks.adapters.SnackAdapter;
@@ -23,53 +29,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void start() {
-        mirea.machines.add(
-                MachineFactory.create(
-                        findViewById(R.id.name1),
-                        findViewById(R.id.status1),
-                        findViewById(R.id.student1),
-                        findViewById(R.id.snacks1),
-                        findViewById(R.id.queue1),
-                        findViewById(R.id.sum1))
-        );
-        mirea.machines.add(
-                MachineFactory.create(
-                        findViewById(R.id.name2),
-                        findViewById(R.id.status2),
-                        findViewById(R.id.student2),
-                        findViewById(R.id.snacks2),
-                        findViewById(R.id.queue2),
-                        findViewById(R.id.sum2))
-        );
-        mirea.machines.add(
-                MachineFactory.create(
-                        findViewById(R.id.name3),
-                        findViewById(R.id.status3),
-                        findViewById(R.id.student3),
-                        findViewById(R.id.snacks3),
-                        findViewById(R.id.queue3),
-                        findViewById(R.id.sum3))
-        );
-        mirea.machines.add(
-                MachineFactory.create(
-                        findViewById(R.id.name4),
-                        findViewById(R.id.status4),
-                        findViewById(R.id.student4),
-                        findViewById(R.id.snacks4),
-                        findViewById(R.id.queue4),
-                        findViewById(R.id.sum4))
-        );
-        for (int i = 0; i < mirea.machines.size(); i++) {
-            Machine machine = mirea.machines.get(i);
-            machine.snackAdapter = new SnackAdapter();
-            machine.snacksField.setAdapter(machine.snackAdapter);
-            machine.snacksField.setLayoutManager(new LinearLayoutManager(this));
-            machine.queueAdapter = new QueueAdapter();
-            machine.queueField.setLayoutManager(new LinearLayoutManager(this));
-            machine.queueField.setAdapter(machine.queueAdapter);
+
+        for (int i = 0; i < 4; i++) {
+            mirea.machines.add(MachineFactory.create());
+            mirea.machines.get(i).setFragment(new MachineFragment());
         }
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.frame1, mirea.machines.get(0).fragment);
+        transaction.replace(R.id.frame2, mirea.machines.get(1).fragment);
+        transaction.replace(R.id.frame3, mirea.machines.get(2).fragment);
+        transaction.replace(R.id.frame4, mirea.machines.get(3).fragment);
+
+        transaction.commit();
+
         mirea.start();
+    }
+
+    public void makeFullScreen(MachineFragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        MachineFragment newFragment = new MachineFragment();
+        transaction.replace(R.id.fullscreenFrame, newFragment);
+        fragment.machine.setBigFragment(newFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
 

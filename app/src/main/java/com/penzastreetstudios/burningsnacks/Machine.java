@@ -26,28 +26,15 @@ public class Machine {
     public String name;
     public String status;
     public int sum;
-    public SnackAdapter snackAdapter;
-    public QueueAdapter queueAdapter;
     public Student student;
-    TextView nameField;
-    TextView statusField;
-    TextView studentField;
-    RecyclerView snacksField;
-    RecyclerView queueField;
-    TextView sumField;
-    public QueueProcess process;
+    //public QueueProcess process;
     public Thread thread;
+    public MachineFragment fragment;
+    public MachineFragment bigFragment;
 
-    public Machine(int id, TextView nameField, TextView statusField, TextView studentField,
-                   RecyclerView snacksField, RecyclerView queueField, TextView sumField) {
+    public Machine(int id) {
         this.id = id;
-        this.nameField = nameField;
-        this.statusField = statusField;
-        this.studentField = studentField;
-        this.snacksField = snacksField;
-        this.queueField = queueField;
-        this.sumField = sumField;
-        name = "Автомат " + id;
+        name = "Автомат " + (id + 1);
         status = "Простаивает";
         thread = new Thread(new QueueThread(this, handler));
     }
@@ -61,14 +48,10 @@ public class Machine {
     };
 
     public void updateView() {
-        nameField.setText(name);
-        statusField.setText(getStatus());
-        studentField.setText(getStudent());
-        snackAdapter.clearItems();
-        snackAdapter.setItems(snacks);
-        queueAdapter.clearItems();
-        queueAdapter.setItems(queue);
-        sumField.setText(Integer.toString(sum));
+        if (fragment != null)
+            fragment.updateView();
+        if (bigFragment != null)
+            bigFragment.updateView();
     }
 
     public void addSnack(ISnack snack) {
@@ -110,5 +93,15 @@ public class Machine {
         if (student == null)
             return "Пусто";
         return student.getName();
+    }
+
+    public void setFragment(MachineFragment fragment) {
+        this.fragment = fragment;
+        fragment.setMachine(this);
+    }
+
+    public void setBigFragment(MachineFragment fragment) {
+        bigFragment = fragment;
+        bigFragment.setMachine(this);
     }
 }

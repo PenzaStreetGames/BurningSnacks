@@ -13,7 +13,7 @@ public class Mirea {
     public void start() {
         fillMachines();
         Fate.getFate().send(machines, 20);
-        update();
+        //update();
         for (int i = 0; i < machines.size(); i++) {
             machines.get(i).thread.start();
             //machines.get(i).process = new QueueProcess();
